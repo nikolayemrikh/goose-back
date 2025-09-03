@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "public"."game" ALTER COLUMN "createdAt" SET DEFAULT CURRENT_TIMESTAMP;
+
+-- AlterTable
+ALTER TABLE "public"."tap" ALTER COLUMN "createdAt" SET DEFAULT CURRENT_TIMESTAMP;

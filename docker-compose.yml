@@ -1,0 +1,74 @@
+version: "2.4"
+x-postgres-vars: &postgres-vars
+  POSTGRES_HOST: "postgres"
+  POSTGRES_DB: "db"
+  POSTGRES_USER: "postgres"
+  POSTGRES_PASSWORD: "qwe123asd"
+  PGDATA: "/var/lib/postgresql/data/"
+
+x-server-vars: &server-vars
+  <<: *postgres-vars
+  NODE_ENV: "production"
+  DATABASE_URL: "postgresql://postgres:qwe123asd@postgres:5432/db"
+
+
+services:
+  postgres:
+    container_name: guss-postgres
+    image: postgres:13-alpine
+    environment: *postgres-vars
+    ports:
+    - "5432:5432"
+    volumes:
+      - "postgres_vol:/var/lib/postgresql/data/"
+    restart: always
+
+  back:
+    container_name: back
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres
+    environment: *server-vars
+    ports:
+      - "3001:3001"
+    command: >
+      /bin/sh -c "
+        ./docker-entrypoint.sh &&
+        node ./dist/src/main.js
+      "
+    restart: always
+
+  # nginx:
+  #   image: nginx:latest
+  #   container_name: nginx_proxy
+  #   ports:
+  #     - "80:80"
+  #     # - "443:443"
+  #     - "8443:8443"
+  #   volumes:
+  #     - ./nginx/conf.d:/etc/nginx/conf.d
+  #     - ./nginx/certs:/etc/letsencrypt
+  #     - ./nginx/html:/var/www/certbot
+  #   depends_on:
+  #     - back
+
+  # certbot:
+  #   image: certbot/certbot
+  #   container_name: certbot
+  #   volumes:
+  #     - ./nginx/certs:/etc/letsencrypt
+  #     - ./nginx/html:/var/www/certbot
+
+  #   command: /bin/sh -c "trap exit TERM; while :; do certbot renew --webroot --webroot-path=/var/www/certbot --quiet --renew-hook 'nginx -s reload'; sleep 12h; done"
+  #   depends_on:
+  #     - nginx
+
+volumes:
+  postgres_vol:
+  redis_vol:
+
+networks:
+  default:
+    driver: bridge

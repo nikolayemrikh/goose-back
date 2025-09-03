@@ -1,0 +1,10 @@
+if (process.env.DATABASE_URL == null) throw new Error('DATABASE_URL is not defined');
+export const DATABASE_URL = process.env.DATABASE_URL;
+if (process.env.BETTER_AUTH_SECRET == null) throw new Error('BETTER_AUTH_SECRET is not defined');
+export const BETTER_AUTH_SECRET = process.env.BETTER_AUTH_SECRET;
+if (process.env.BETTER_AUTH_URL == null) throw new Error('BETTER_AUTH_URL is not defined');
+export const BETTER_AUTH_URL = process.env.BETTER_AUTH_URL;
+if (!process.env.ROUND_DURATION) throw new Error('ROUND_DURATION is not defined');
+export const ROUND_DURATION = process.env.ROUND_DURATION;
+if (process.env.COOLDOWN_DURATION == null) throw new Error('COOLDOWN_DURATION is not defined');
+export const COOLDOWN_DURATION = process.env.COOLDOWN_DURATION;
