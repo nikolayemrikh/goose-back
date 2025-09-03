@@ -1,6 +1,7 @@
 import { createGame } from './authenticated/create-game';
 import { createTap } from './authenticated/create-tap';
 import { game } from './authenticated/game';
+import { gameSummary } from './authenticated/game-summary';
 import { games } from './authenticated/games';
 import { ownScore } from './authenticated/own-score';
 
@@ -16,6 +17,7 @@ export const rpcMethods = {
     game,
     games,
     ownScore,
+    gameSummary,
     createGame,
     createTap,
   } satisfies Record<string, TMethod>,
