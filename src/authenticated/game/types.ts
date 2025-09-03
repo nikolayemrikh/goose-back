@@ -2,6 +2,8 @@ import z from 'zod';
 import { EGameStatus } from '../../services/game/calculateStatus/enums';
 import { schema } from './schema';
 
+export type TParams = z.infer<typeof schema>;
+
 export interface IGame {
   id: string;
   createdAt: string;
@@ -11,8 +13,13 @@ export interface IGame {
   status: EGameStatus;
 }
 
-export interface IGamesResponse {
-  games: IGame[];
+export interface IGameFoundResponse {
+  game: IGame;
+  status: 'found';
 }
 
-export type TParams = z.infer<typeof schema>;
+export interface IGameNotFoundResponse {
+  status: 'not-found';
+}
+
+export type TGameResponse = IGameFoundResponse | IGameNotFoundResponse;

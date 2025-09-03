@@ -1,3 +1,5 @@
+if (process.env.ALLOWED_ORIGIN == null) throw new Error('ALLOWED_ORIGIN is not defined');
+export const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN;
 if (process.env.DATABASE_URL == null) throw new Error('DATABASE_URL is not defined');
 export const DATABASE_URL = process.env.DATABASE_URL;
 if (process.env.BETTER_AUTH_SECRET == null) throw new Error('BETTER_AUTH_SECRET is not defined');

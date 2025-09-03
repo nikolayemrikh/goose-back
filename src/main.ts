@@ -9,6 +9,7 @@ import { Context, Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { BlankInput } from 'hono/types';
 import { auth } from './auth';
+import { ALLOWED_ORIGIN } from './env';
 import { rpcMethods } from './rpc';
 
 interface IAppEnvs {
@@ -18,12 +19,6 @@ interface IAppEnvs {
   };
 }
 const app = new Hono<IAppEnvs>();
-
-const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN;
-
-if (!ALLOWED_ORIGIN) {
-  throw new Error('ALLOWED_ORIGIN is not set');
-}
 
 app.use(
   '*',
