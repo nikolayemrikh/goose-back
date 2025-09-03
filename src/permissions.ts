@@ -7,7 +7,7 @@ export const statement = {
 export const ac = createAccessControl(statement);
 
 export const admin = ac.newRole({
-  goose: ['create-game'],
+  goose: ['tap-increase-counter', 'create-game'],
 });
 
 export const regularPlayer = ac.newRole({
