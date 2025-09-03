@@ -1,26 +1,21 @@
+import { auth } from '../../auth';
 import { withRequiredAuth } from '../../core/withRequiredAuth';
-import { prisma } from '../../prisma';
+import * as gameService from '../../services/game';
 import { ICreateTapCreatedResponse, ICreateTapNotFoundResponse, TParams } from './types';
 
 export const createTap = withRequiredAuth(async function ({
   gameId,
 }: TParams): Promise<ICreateTapNotFoundResponse | ICreateTapCreatedResponse> {
-  const game = await prisma.game.findUnique({
-    where: {
-      id: gameId,
+  const permissionRes = await auth.api.userHasPermission({
+    body: {
+      userId: this.user.id,
+      permissions: {
+        goose: ['tap-increase-counter'],
+      },
     },
   });
 
-  if (!game) {
-    return {
-      status: 'not-found',
-    };
-  }
+  console.log(permissionRes);
 
-  await prisma.gameTap.create({
-    data: { gameId: game.id, userId: this.user.id },
-  });
-  return {
-    status: 'created',
-  };
+  return gameService.createTap(gameId, this.user.id);
 });

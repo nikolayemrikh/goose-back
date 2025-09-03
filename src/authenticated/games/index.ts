@@ -1,20 +1,19 @@
 import { withRequiredAuth } from '../../core/withRequiredAuth';
-import { prisma } from '../../prisma';
-import { calculateGameEndAt } from '../../services/game/calculateGameEndAt';
-import { calculateStatus } from '../../services/game/calculateStatus';
+import * as gameService from '../../services/game';
+import { enrichGameEntity } from '../../services/game/enrichGameEntity';
 import { IGamesResponse } from './types';
 
 export const games = withRequiredAuth(async function (): Promise<IGamesResponse> {
-  const games = await prisma.game.findMany();
+  const games = await gameService.listGames();
 
   return {
     games: games.map((game) => {
+      const enrichedGame = enrichGameEntity(game);
       return {
-        ...game,
-        status: calculateStatus(game.startAt),
-        endAt: calculateGameEndAt(game.startAt).toISOString(),
-        createdAt: game.createdAt.toISOString(),
-        startAt: game.startAt.toISOString(),
+        ...enrichedGame,
+        endAt: enrichedGame.endAt.toISOString(),
+        createdAt: enrichedGame.createdAt.toISOString(),
+        startAt: enrichedGame.startAt.toISOString(),
       };
     }),
   };
