@@ -1,5 +1,5 @@
-import { calculateGameEndAt } from '../calculateGameEndAt';
-import { calculateStatus } from '../calculateStatus';
+import { calculateGameEndAt } from '../utils/calculateGameEndAt';
+import { calculateStatus } from '../utils/calculateStatus';
 import { IGame, IGameEnriched } from './types';
 
 export const enrichGameEntity = (game: IGame): IGameEnriched => {

@@ -1,4 +1,4 @@
-import { EGameStatus } from '../calculateStatus/enums';
+import { EGameStatus } from '../utils/calculateStatus/enums';
 
 export interface IGame {
   id: string;

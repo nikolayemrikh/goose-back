@@ -49,8 +49,6 @@ const applyParamsToMethodWithContext = (
   params: unknown[],
   c: Context<IAppEnvs, '/**', BlankInput>
 ): Promise<void> => {
-  console.log(c.req.raw.headers);
-
   return fn.apply(c, params);
 };
 
@@ -67,6 +65,7 @@ app.on(['POST', 'GET'], '/api/auth/**', (c) => auth.handler(c.req.raw));
 
 serve({
   fetch: app.fetch,
+  hostname: process.env.HOSTNAME,
   port: 3000,
 });
 

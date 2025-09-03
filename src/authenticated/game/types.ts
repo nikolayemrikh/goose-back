@@ -1,5 +1,5 @@
 import z from 'zod';
-import { EGameStatus } from '../../services/game/calculateStatus/enums';
+import { EGameStatus } from '../../services/game/utils/calculateStatus/enums';
 import { schema } from './schema';
 
 export type TParams = z.infer<typeof schema>;
