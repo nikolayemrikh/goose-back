@@ -1,19 +1,22 @@
 import { prisma } from '../../../prisma';
-import { getScore } from '../getScore';
+import { calculateScore } from '../utils/calculateScore';
 
 export const getGameSummary = async (gameId: string) => {
-  const userTaps = await prisma.gameTap.findMany({ where: { gameId }, distinct: 'userId', include: { user: true } });
-  const userScores = (
-    await Promise.all(
-      userTaps.map(async (tap) => {
-        const score = await getScore(gameId, tap.userId);
-        return {
-          user: tap.user,
-          score,
-        };
-      })
-    )
-  ).sort((a, b) => b.score - a.score);
+  const userTaps = await prisma.gameTap.groupBy({
+    by: ['userId'],
+    where: { gameId, countable: true },
+    _count: { _all: true },
+  });
+
+  const userScores = userTaps
+    .map((tap) => {
+      const score = calculateScore(tap._count._all);
+      return {
+        userId: tap.userId,
+        score,
+      };
+    })
+    .sort((a, b) => b.score - a.score);
 
   const totalScore = userScores.reduce((score, userScore) => {
     score += userScore.score;
@@ -22,8 +25,14 @@ export const getGameSummary = async (gameId: string) => {
 
   const winnerUserScore = userScores[0];
 
+  const winnerUser = winnerUserScore
+    ? await prisma.user.findFirst({
+        where: { id: winnerUserScore?.userId },
+      })
+    : null;
+
   return {
     totalScore,
-    winnerUsername: winnerUserScore?.user.name ?? null,
+    winnerUsername: winnerUser?.name ?? null,
   };
 };
